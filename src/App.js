@@ -1,18 +1,47 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
-import './App.css';
+import _ from 'lodash';
+
+export function reducer(state, action = {}) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return {
+        ...state,
+        count: state.count + (action.payload || 1),
+      };
+    case 'DECREMENT':
+      return {
+        ...state,
+        count: state.count - 1,
+      };
+    default:
+      return state;
+  }
+}
 
 class App extends Component {
+  state = {
+    count: 1,
+  };
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <button
+          onClick={() => {
+            const action = {type: 'DECREMENT', payload: this.props.step || 1};
+            this.setState(state => reducer(state, action));
+          }}
+        >
+          {`+ ${this.props.step || 1}`}
+        </button>
+        <button
+          onClick={() => {
+            const action = {type: 'DECREMENT', payload: this.props.step || 1};
+            this.setState(state => reducer(state, action));
+          }}
+        >
+          {`- ${this.props.step || 1}`}
+        </button>
+        <h1>{this.state.count}</h1>
       </div>
     );
   }
