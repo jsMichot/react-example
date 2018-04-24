@@ -1,37 +1,451 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component should show increment size if provided 1`] = `
-<div>
-  <button
-    onClick={[Function]}
-  >
-    + 5
-  </button>
-  <button
-    onClick={[Function]}
-  >
-    - 5
-  </button>
-  <h1>
-    3
-  </h1>
-</div>
+exports[`render: cell click triggers editing & autofocus 1`] = `
+Array [
+  <table>
+    <thead>
+        <tr>
+            <th>
+                Class
+            </th>
+            <th>
+                Schedule
+            </th>
+            <th>
+                1
+            </th>
+            <th>
+                2
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                80
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                300
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={false}
+                    defaultValue={2.2}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={true}
+                    defaultValue={0}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+        </tr>
+    </tbody>
+</table>,
+  <div>
+    Mutations:
+    <strong>
+        Adds =
+         
+        0
+    </strong>
+     | 
+    <strong>
+        Updates =
+         
+        0
+    </strong>
+</div>,
+]
 `;
 
-exports[`should render component and its current state 1`] = `
-<div>
-  <button
-    onClick={[Function]}
-  >
-    + 1
-  </button>
-  <button
-    onClick={[Function]}
-  >
-    - 1
-  </button>
-  <h1>
-    3
-  </h1>
-</div>
+exports[`render: default with cell autofocus 1`] = `
+Array [
+  <table>
+    <thead>
+        <tr>
+            <th>
+                Class
+            </th>
+            <th>
+                Schedule
+            </th>
+            <th>
+                1
+            </th>
+            <th>
+                2
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                80
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={false}
+                    defaultValue={1.2}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={true}
+                    defaultValue={0}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                300
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                2.2
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+        </tr>
+    </tbody>
+</table>,
+  <div>
+    Mutations:
+    <strong>
+        Adds =
+         
+        0
+    </strong>
+     | 
+    <strong>
+        Updates =
+         
+        0
+    </strong>
+</div>,
+]
+`;
+
+exports[`render: default with data 1`] = `
+Array [
+  <table>
+    <thead>
+        <tr>
+            <th>
+                Class
+            </th>
+            <th>
+                Schedule
+            </th>
+            <th>
+                1
+            </th>
+            <th>
+                2
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                80
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                300
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                2.2
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+        </tr>
+    </tbody>
+</table>,
+  <div>
+    Mutations:
+    <strong>
+        Adds =
+         
+        0
+    </strong>
+     | 
+    <strong>
+        Updates =
+         
+        0
+    </strong>
+</div>,
+]
+`;
+
+exports[`render: default with edited row 1`] = `
+Array [
+  <table>
+    <thead>
+        <tr>
+            <th>
+                Class
+            </th>
+            <th>
+                Schedule
+            </th>
+            <th>
+                1
+            </th>
+            <th>
+                2
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                80
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={true}
+                    defaultValue={1.2}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                <input
+                    autoFocus={false}
+                    defaultValue={0}
+                    name="laborFactor"
+                    onBlur={[Function]}
+                />
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                300
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                2.2
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+        </tr>
+        <tr>
+            <td
+                onClick={[Function]}
+            >
+                150
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                0
+            </td>
+            <td
+                onClick={[Function]}
+            >
+                1.2
+            </td>
+        </tr>
+    </tbody>
+</table>,
+  <div>
+    Mutations:
+    <strong>
+        Adds =
+         
+        0
+    </strong>
+     | 
+    <strong>
+        Updates =
+         
+        0
+    </strong>
+</div>,
+]
 `;
