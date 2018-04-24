@@ -229,8 +229,9 @@ export class LaborFactorTable extends Component {
   };
 
   _handleSaveNewSize = newSize => {
-    console.log(newSize);
-    this._dispatch({type: 'SAVE_NEW_SIZE', payload: parseFloat(newSize)});
+    this.state.sizes.includes(parseFloat(newSize))
+      ? this._exitAddingSizeMode()
+      : this._dispatch({type: 'SAVE_NEW_SIZE', payload: parseFloat(newSize)});
   };
 
   render() {
