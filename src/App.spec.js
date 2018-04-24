@@ -1,184 +1,215 @@
 import React from 'react';
 import {create} from 'react-test-renderer';
-import {reducer} from './Components/LaborFactorTable';
-import App from '../App';
+import {reducer, LaborFactorTable} from './App';
 
-xit('should render component and its current state', () => {
-  const component = create(<App />);
-  const initialState = {count: 3};
-  component.root.instance.setState(initialState);
-  const tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
-});
+it('component: LaborFactorTable => derive row and size data from props', () => {
+  const DATA = [
+    {id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2},
+    {id: 2, size: 1, class: '300', schedule: '2', laborFactor: 2.2},
+    {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+  ];
 
-xit('component should show increment size if provided', () => {
-  const component = create(<App step={5} />);
-  const initialState = {count: 3};
-  component.root.instance.setState(initialState);
-  const tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
-});
-
-describe('LaborFactorTable', () => {
-  beforeEach(() => {
-    create(<App />);
+  expect(LaborFactorTable.getDerivedStateFromProps({data: DATA})).toEqual({
+    sizes: [1, 2],
+    rows: [
+      {
+        schedule: '1',
+        class: '150',
+        1: {id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2},
+      },
+      {
+        schedule: '2',
+        class: '300',
+        1: {id: 2, size: 1, class: '300', schedule: '2', laborFactor: 2.2},
+      },
+      {
+        schedule: '',
+        class: '150',
+        2: {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+      },
+    ],
   });
-  
-  it('action: GetLaborFactorData should return the proper items', () => {
+});
+
+it('reducer: EDIT_ROW', () => {
   // arrange
-    const currentState = {data: []};
-    const action = {type: 'GetLaborFactorData'};
-    // act
-    const nextState = reducer(currentState, action);
-    // assert
-    expect(nextState.data).toEqual([
-      {id: 1, size: 1, class: '150', schedule: '', laborFactor: 1.2},
-      {id: 1, size: 1, class: '300', schedule: '', laborFactor: 2.2},
-      {id: 1, size: 2, class: '150', schedule: '', laborFactor: 1.2},
-      {id: 1, size: 2, class: '300', schedule: '', laborFactor: 2.2},
-      {id: 1, size: 3, class: '150', schedule: '', laborFactor: 1.2},
-      {id: 1, size: 3, class: '300', schedule: '', laborFactor: 1.3},
-      {id: 1, size: 3, class: '450', schedule: '', laborFactor: 1.4},
-      {id: 1, size: 3, class: '450', schedule: '80', laborFactor: 1.4},
-    ]);
+  const state = {};
+  const action = {
+    type: 'EDIT_ROW',
+    payload: {
+      row: {},
+      targetIndex: 0,
+    },
+  };
+
+  // act
+  const nextState = reducer(state, action);
+
+  // assert
+  expect(nextState).toEqual({
+    editingRow: {},
+    targetIndex: 0,
   });
+});
 
-  it('editLaborFactor should set editValues to scheduleClassPairs', () => {
-    this.scheduleClassPairs = [{ foo: 1 }];
-    this.editLaborFactor();
+it('reducer: ADD_CHANGED_RECORD', () => {
+  // arrange
+  const state = {mutations: {}};
+  const record = {class: '123', schedule: '123', size: 1};
+  const action = {
+    type: 'ADD_CHANGED_RECORD',
+    payload: {
+      record,
+    },
+  };
 
-    expect(this.editing).toBe(true);
-    expect(this.editValues).toEqual([{ foo: 1 }]);
+  // act
+  const nextState = reducer(state, action);
+
+  // assert
+  expect(nextState).toEqual({
+    mutations: {
+      [`${record.class}|${record.schedule}|${record.size}`]: record,
+    },
   });
+});
 
-  it('setLaborFactor should set scheduleClassPairs to editValues', () => {
-    this.editing = true;
-    this.setLaborFactors();
+it('reducer: REMOVE_CHANGED_RECORD', () => {
+  // arrange
+  const record = {class: '123', schedule: '123', size: 1};
+  const state = {
+    mutations: {
+      [`${record.class}|${record.schedule}|${record.size}`]: record,
+    },
+  };
+  const action = {
+    type: 'REMOVE_CHANGED_RECORD',
+    payload: {
+      record,
+    },
+  };
 
-    expect(this.editing).toBe(false);
+  // act
+  const nextState = reducer(state, action);
+
+  // assert
+  expect(nextState).toEqual({
+    mutations: {},
   });
+});
 
-  it('cancelEdit should set scheduleClassPairs to editValues and editing to false', () => {
-    this.editValues = [{ foo: 1 }];
-    this.scheduleClassPairs = [{ foo: 2 }];
-    this.cancelEdit();
-    expect(this.scheduleClassPairs).toEqual([{ foo: 1 }]);
-    expect(this.editing).toBe(false);
-  });
+it('reducer: CANCEL_CHANGES', () => {
+  // arrange
+  const state = {
+    mutations: {class: '123', schedule: '123', size: 1},
+    editingRow: {
+      class: '123',
+      schedule: '123',
+      1: {
+        class: '123',
+        schedule: '123',
+        size: 1,
+      },
+    },
+  };
+  const action = {type: 'CANCEL_CHANGES'};
 
-  it('when editLaborFactor is called editValues and scheduleClassPairs should not point to the same array nor the same objects', () => {
-    this.scheduleClassPairs = [{ foo: 1 }];
-    this.editLaborFactor();
-    this.editValues[0].foo = 2;
+  //act
+  const nextState = reducer(state, action);
 
-    expect(this.scheduleClassPairs).toEqual([{ foo: 1 }]);
-  });
+  // assert
+  expect(nextState).toEqual({mutations: {}, editingRow: null});
+});
 
-  it('when cancelEdit is called editValues and scheduleClassPairs should not point to the same array nor the same objects (i.e. editValues retains the pre-editing values of scheduleClassPairs)', () => {
-    this.scheduleClassPairs = [{ foo: 1 }];
-    this.editLaborFactor();
-    this.scheduleClassPairs[0].foo = 2;
-    this.cancelEdit();
+it('reducer: ENTER_ADDING_SIZE_MODE', () => {
+  // arrange
+  const state = {addingSize: false};
+  // act
+  const newState = reducer(state, {type: 'ENTER_ADDING_SIZE_MODE'});
+  // assert
+  expect(newState).toEqual({addingSize: true});
+});
 
-    expect(this.editValues).toEqual([{ foo: 1 }]);
-  });
+it('reducer: EXIT_ADDING_SIZE_MODE', () => {
+  // arrange
+  const state = {addingSize: true};
+  // act
+  const newState = reducer(state, {type: 'EXIT_ADDING_SIZE_MODE'});
+  // assert
+  expect(newState).toEqual({addingSize: false});
+});
 
-  it('when addNewColumn is called sizes should be cloned to tempSizes (separate arrays) with an added size of the next whole number', () => {
-    this.sizes = [1, 2, 3];
-    this.addNewColumn();
-    expect(this.tempSizes).toEqual([1, 2, 3, 4]);
-    this.sizes = [1, 2, 3, 4.34];
-    this.addNewColumn();
-    expect(this.tempSizes).toEqual([1, 2, 3, 4.34, 5]);
-  });
+it('reducer: SAVE_NEW_SIZE', () => {
+  // arrange
+  const state = {sizes: [1, 2, 3]};
+  // act
+  const newState = reducer(state, {type: 'SAVE_NEW_SIZE', payload: 2.5});
+  // assert
+  expect(newState).toEqual({sizes: [1, 2, 2.5, 3], addingSize: false});
+});
 
-  it('when addNewColumn is called addingColumn should be set to true', () => {
-    this.addNewColumn();
-    expect(this.addingColumn).toBe(true);
-  });
-  it('when saveNewColumn is called sizes should not contain any duplicates', () => {
-    this.sizes = [1, 2, 3, 3];
-    this.tempSizes = [1, 2, 3, 3, 3];
-    this.saveNewColumn();
-    expect(this.sizes).toEqual([1, 2, 3]);
-  });
+xit('render: default with data', () => {
+  const DATA = [
+    {id: 1, size: 1, class: '150', schedule: '80', laborFactor: 1.2},
+    {id: 2, size: 1, class: '300', schedule: '', laborFactor: 2.2},
+    {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+  ];
 
-  it('when deleteNewColumn is called addingColumn should be set to false', () => {
-    this.deleteNewColumn();
-    expect(this.addingColumn).toBe(false);
-  });
+  const component = create(<LaborFactorTable data={DATA} />);
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
 
-  it('when saveNewColumn is called sizes should be sorted', () => {
-    const data = [
-      { id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2 },
-      { id: 1, size: 1, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 2, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 2, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 3, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 3, class: '300', schedule: '3', laborFactor: 1.3 },
-      { id: 1, size: 3, class: '450', schedule: '', laborFactor: 1.4 },
-    ];
-    this.sizes = [1, 2, 3];
-    this.addNewColumn();
-    this.sizes.push(2.5);
-    this.saveNewColumn();
-    expect(this.sizes).toEqual([1, 2, 2.5, 3, 4]);
-  });
+it('render: default with edited row', () => {
+  const DATA = [
+    {id: 1, size: 1, class: '150', schedule: '80', laborFactor: 1.2},
+    {id: 2, size: 1, class: '300', schedule: '', laborFactor: 2.2},
+    {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+  ];
 
-  it('addNewRow should set addingRow to true', () => {
-    this.addingRow = false;
-    this.addNewRow();
-    expect(this.addingRow).toBe(true);
-  });
+  const component = create(<LaborFactorTable data={DATA} />);
+  const editingRow = component.root.instance.state.rows[0];
+  component.root.instance.setState({editingRow});
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
 
-  it('saveNewRow should add the new item to data', () => {
-    this.data = [
-      { id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2 },
-      { id: 1, size: 1, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 2, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 2, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 3, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 3, class: '300', schedule: '3', laborFactor: 1.3 },
-      { id: 1, size: 3, class: '450', schedule: '', laborFactor: 1.4 },
-    ];
-    this.newRowId = 1;
-    this.newRowClass = '200';
-    this.newRowSchedule = '';
-    this.saveNewRow();
-    expect(this.data).toEqual([
-      { id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2 },
-      { id: 1, size: 1, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 2, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 2, class: '300', schedule: '2', laborFactor: 2.2 },
-      { id: 1, size: 3, class: '150', schedule: '', laborFactor: 1.2 },
-      { id: 1, size: 3, class: '300', schedule: '3', laborFactor: 1.3 },
-      { id: 1, size: 3, class: '450', schedule: '', laborFactor: 1.4 },
-      { id: 1, class: '200', schedule: '' },
-    ]);
-  });
+xit('render: default with cell autofocus', () => {
+  const DATA = [
+    {id: 1, size: 1, class: '150', schedule: '80', laborFactor: 1.2},
+    {id: 2, size: 1, class: '300', schedule: '', laborFactor: 2.2},
+    {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+  ];
 
-  it('cancelNewRow should set newRowId to 1', () => {
-    this.newRowId = 4;
-    this.cancelNewRow();
-    expect(this.newRowId).toBe(1);
-  });
+  const component = create(<LaborFactorTable data={DATA} />);
+  const editingRow = component.root.instance.state.rows[0];
+  component.root.instance.setState({editingRow, targetIndex: 1});
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
 
-  it('cancelNewRow should set newRowClass to an empty string', () => {
-    this.newRowClass = '350';
-    this.cancelNewRow();
-    expect(this.newRowClass).toBe('');
-  });
+xit('render: cell click triggers editing & autofocus', () => {
+  const DATA = [
+    {id: 1, size: 1, class: '150', schedule: '80', laborFactor: 1.2},
+    {id: 2, size: 1, class: '300', schedule: '', laborFactor: 2.2},
+    {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
+  ];
 
-  it('cancelNewRow should set newRowSchedule to an empty string', () => {
-    this.newRowSchedule = '3';
-    this.cancelNewRow();
-    expect(this.newRowSchedule).toBe('');
-  });
-
-  it('cancelNewRow should set addingRow to false', () => {
-    this.addingRow = true;
-    this.cancelNewRow();
-    expect(this.addingRow).toBe(false);
-  });
-
+  const component = create(<LaborFactorTable data={DATA} />);
+  /**
+   * |===========================|
+   * | Class | Sched |  1  |  2  |
+   * |===========================|
+   * |  150  |  80   | 1.2 |  0  |
+   * |  300  |       | 2.2 |  0  |
+   * |  150  |       |  0  |  X  | <== 2.2
+   * |===========================|
+   */
+  component.root
+    .findByType('tbody')
+    .findAllByType('tr')[1]
+    .findAllByType('td')[3]
+    .props.onClick();
+  const tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
 });
