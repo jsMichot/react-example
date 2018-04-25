@@ -337,6 +337,14 @@ Array [
 
 exports[`render: default with edited row 1`] = `
 Array [
+  <button
+    onClick={[Function]}
+>
+    <em>
+        Add Size
+    </em>
+</button>,
+  <br />,
   <table>
     <thead>
         <tr>

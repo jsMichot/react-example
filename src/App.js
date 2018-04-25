@@ -133,6 +133,24 @@ export function reducer(state, action = {}) {
         sizes: state.sizes.concat(action.payload).sort(),
         addingSize: false,
       };
+    case 'ENTER_ADDING_CLASS|SCHEDULE_MODE':
+      return {
+        ...state,
+        addingClassSchedule: true,
+      };
+    case 'EXIT_ADDING_CLASS|SCHEDULE_MODE':
+      return {
+        ...state,
+        addingClassSchedule: false,
+      };
+    case 'SAVE_NEW_CLASS|SCHEDULE':
+      return {
+        ...state,
+        rows: state.rows
+          .concat(action.payload)
+          .sort((a, b) => a.class - b.class),
+        addingClassSchedule: false,
+      };
     default:
       return state;
   }
@@ -144,6 +162,7 @@ export class LaborFactorTable extends Component {
     targetIndex: 0,
     mutations: {},
     addingSize: false,
+    addingClassSchedule: false,
     sizes: {},
     rows: {},
   };
@@ -234,12 +253,31 @@ export class LaborFactorTable extends Component {
       : this._dispatch({type: 'SAVE_NEW_SIZE', payload: parseFloat(newSize)});
   };
 
+  _enterAddingClassScheduleMode = () => {
+    this._dispatch({type: 'ENTER_ADDING_CLASS|SCHEDULE_MODE'});
+  };
+
+  _exitAddingClassScheduleMode = () => {
+    this._dispatch({type: 'EXIT_ADDING_CLASS|SCHEDULE_MODE'});
+  };
+
+  _handleSaveNewClassSchedule = newRow => {
+    this.state.rows.filter(
+      row => row.class === newRow.class && row.schedule === newRow.schedule
+    ).length
+      ? this._exitAddingClassScheduleMode()
+      : this._dispatch({type: 'SAVE_NEW_CLASS|SCHEDULE', payload: newRow});
+  };
+
   render() {
     return (
       <React.Fragment>
         {this.state.addingSize
           ? this._renderAddNewSizeInput()
-          : this._renderAddNewSizeButton()}
+          : this._renderAddNewSizeButton()}{' '}
+        {this.state.addingClassSchedule
+          ? this._renderAddNewClassScheduleInput()
+          : this._renderAddNewClassScheduleButton()}
         <br />
         <table>
           <thead>
@@ -383,6 +421,44 @@ export class LaborFactorTable extends Component {
       <React.Fragment>
         <button onClick={this._enterAddingSizeMode}>
           <em>Add Size</em>
+        </button>
+      </React.Fragment>
+    );
+  };
+
+  _renderAddNewClassScheduleInput = () => {
+    return (
+      <React.Fragment>
+        <label>Enter Class: </label>
+        <input
+          type="text"
+          placeholder="class"
+          autoFocus={true}
+          id="newClass"
+        />{' '}
+        <label>Enter Schedule: </label>
+        <input type="text" placeholder="schedule" id="newSchedule" />{' '}
+        <button
+          type="submit"
+          onClick={() => {
+            this._handleSaveNewClassSchedule({
+              class: document.getElementById('newClass').value,
+              schedule: document.getElementById('newSchedule').value,
+            });
+          }}
+        >
+          Save
+        </button>{' '}
+        <button onClick={this._exitAddingClassScheduleMode}>Cancel</button>
+      </React.Fragment>
+    );
+  };
+
+  _renderAddNewClassScheduleButton = () => {
+    return (
+      <React.Fragment>
+        <button onClick={this._enterAddingClassScheduleMode}>
+          <em>Add Class|Schedule</em>
         </button>
       </React.Fragment>
     );
