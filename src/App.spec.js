@@ -77,9 +77,12 @@ it('reducer: ADD_CHANGED_RECORD', () => {
 it('reducer: REMOVE_CHANGED_RECORD', () => {
   // arrange
   const record = {class: '123', schedule: '123', size: 1};
+  const record2 = {class: '222', schedule: '222', size: 2};
   const state = {
+    testing: true,
     mutations: {
       [`${record.class}|${record.schedule}|${record.size}`]: record,
+      [`${record2.class}|${record2.schedule}|${record2.size}`]: record2,
     },
   };
   const action = {
@@ -94,7 +97,10 @@ it('reducer: REMOVE_CHANGED_RECORD', () => {
 
   // assert
   expect(nextState).toEqual({
-    mutations: {},
+    mutations: {
+      [`${record2.class}|${record2.schedule}|${record2.size}`]: record2,
+    },
+    testing: true,
   });
 });
 
@@ -177,7 +183,7 @@ it('reducer: SAVE_NEW_CLASS|SCHEDULE', () => {
   // assert
   expect(newState).toEqual({
     rows: [{class: '400', schedule: ''}],
-    addingClassSchedule: true,
+    addingClassSchedule: false,
   });
 });
 
