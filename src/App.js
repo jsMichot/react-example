@@ -237,41 +237,16 @@ export class LaborFactorTable extends Component {
   render() {
     return (
       <React.Fragment>
+        {this.state.addingSize
+          ? this._renderAddNewSizeInput()
+          : this._renderAddNewSizeButton()}
+        <br />
         <table>
           <thead>
             <tr>
               <th>Class</th>
               <th>Schedule</th>
               {this.state.sizes.map(size => <th key={size}>{size}</th>)}
-              {this.state.addingSize ? (
-                <th>
-                  <input
-                    type="text"
-                    defaultValue={Math.floor(
-                      this.state.sizes[this.state.sizes.length - 1] + 1
-                    )}
-                    autoFocus={true}
-                    id="newSize"
-                  />{' '}
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      this._handleSaveNewSize(
-                        document.getElementById('newSize').value
-                      );
-                    }}
-                  >
-                    Save
-                  </button>{' '}
-                  <button onClick={this._exitAddingSizeMode}>Cancel</button>
-                </th>
-              ) : (
-                <th onClick={this._enterAddingSizeMode}>
-                  <button>
-                    <em>Add Size</em>
-                  </button>
-                </th>
-              )}
             </tr>
           </thead>
           <tbody>{this.state.rows.map(this._renderRow)}</tbody>
@@ -375,6 +350,41 @@ export class LaborFactorTable extends Component {
           </React.Fragment>
         )}
       </td>
+    );
+  };
+
+  _renderAddNewSizeInput = () => {
+    return (
+      <React.Fragment>
+        <label>Enter Size: </label>
+        <input
+          type="text"
+          defaultValue={Math.floor(
+            this.state.sizes[this.state.sizes.length - 1] + 1
+          )}
+          autoFocus={true}
+          id="newSize"
+        />{' '}
+        <button
+          type="submit"
+          onClick={() => {
+            this._handleSaveNewSize(document.getElementById('newSize').value);
+          }}
+        >
+          Save
+        </button>{' '}
+        <button onClick={this._exitAddingSizeMode}>Cancel</button>
+      </React.Fragment>
+    );
+  };
+
+  _renderAddNewSizeButton = () => {
+    return (
+      <React.Fragment>
+        <button onClick={this._enterAddingSizeMode}>
+          <em>Add Size</em>
+        </button>
+      </React.Fragment>
     );
   };
 }
