@@ -5,17 +5,19 @@ import {reducer, LaborFactorTable} from './App';
 it('component: LaborFactorTable => derive row and size data from props', () => {
   const DATA = [
     {id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2},
+    {id: 4, size: 1.5, class: '150', schedule: '1', laborFactor: 1.2},
     {id: 2, size: 1, class: '300', schedule: '2', laborFactor: 2.2},
     {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
   ];
 
   expect(LaborFactorTable.getDerivedStateFromProps({data: DATA})).toEqual({
-    sizes: [1, 2],
+    sizes: [1, 1.5, 2],
     rows: [
       {
         schedule: '1',
         class: '150',
         1: {id: 1, size: 1, class: '150', schedule: '1', laborFactor: 1.2},
+        1.5: {id: 4, size: 1.5, class: '150', schedule: '1', laborFactor: 1.2},
       },
       {
         schedule: '2',

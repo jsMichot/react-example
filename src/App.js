@@ -18,7 +18,7 @@ let nextId = 9;
 const api = {
   _data: [
     {id: 1, size: 1, class: '150', schedule: '', laborFactor: 1.2},
-    {id: 2, size: 1, class: '300', schedule: '', laborFactor: 2.2},
+    {id: 2, size: 1.5, class: '300', schedule: '', laborFactor: 2.2},
     {id: 3, size: 2, class: '150', schedule: '', laborFactor: 1.2},
     {id: 4, size: 2, class: '300', schedule: '', laborFactor: 2.2},
     {id: 5, size: 3, class: '150', schedule: '', laborFactor: 1.2},
@@ -191,7 +191,9 @@ export class LaborFactorTable extends Component {
       {sizes: {}, rows: {}}
     );
     return {
-      sizes: Object.keys(stateMap.sizes).map(x => parseInt(x, 10)),
+      sizes: Object.keys(stateMap.sizes)
+        .map(x => parseFloat(x, 10))
+        .sort(),
       rows: Object.keys(stateMap.rows).map(x => stateMap.rows[x]),
     };
   }
